@@ -152,11 +152,12 @@ class VideoGPT(pl.LightningModule):
             x = shift_dim(x, 1, -1)
 
         loss, _ = self(x, targets, cond)
+        self.log('train/loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
         loss = self.training_step(batch, batch_idx)
-        self.log('val/loss', loss, prog_bar=True)
+        self.log('val/loss', loss, on_epoch=True, prog_bar=True, logger=True)
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=3e-4, betas=(0.9, 0.999))
